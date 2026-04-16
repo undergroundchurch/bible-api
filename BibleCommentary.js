@@ -42,7 +42,7 @@ class Commentary {
 
   getVerseRef() {
     let aux = constants.getBookTitleById(this.book);
-    return `_${aux} ${this.chapter}:${this.fromVerse}-${this.toVerse}_.`;
+    return `${aux} ${this.chapter}:${this.fromVerse}-${this.toVerse}.`;
   }
 
   getData() {

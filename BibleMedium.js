@@ -92,7 +92,13 @@ class BibleMedium {
   }
 
   processSQL(sql, order = 'GET') {
-    const db = new Database(this.dbpath, { readonly: true });
+    let db = null;
+    try {
+      db = new Database(this.dbpath, { readonly: true });
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
     let row = null;
 
     try {

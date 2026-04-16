@@ -33,6 +33,8 @@ class BibleCommandInterpreter {
             verses = this.getVersesParsed(args, fre);
         } else if (RegExp(versions.BibleVersionEnum.ISV).test(args)) {
             verses = this.getVersesParsed(args, isv);
+        } else {
+            verses = this.getVersesParsed(args, acf);
         }
 
         return verses;

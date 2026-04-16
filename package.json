@@ -26,11 +26,11 @@
   },
   "homepage": "https://github.com/synicalsyntax/discord.js-heroku#readme",
   "dependencies": {
-    "better-sqlite3": "^5.0.1",
-    "bible-passage-reference-parser": "^2.0.1",
-    "discord.js": "^11.3.0",
-    "moment": "^2.23.0",
-    "turndown": "^5.0.1",
-    "xml2js": "^0.4.19"
+    "better-sqlite3": "*",
+    "bible-passage-reference-parser": "*",
+    "moment": "*",
+    "prompt-sync": "^4.2.0",
+    "turndown": "*",
+    "xml2js": "*"
   }
 }

@@ -38,7 +38,7 @@ class Verse {
 
   getVerseRef() {
     let aux = constants.getBookTitleById(this.book);
-    return `_${aux} ${this.chapter}:${this.verse}_.`;
+    return `${aux} ${this.chapter}:${this.verse}.`;
   }
 
   getScripture() {

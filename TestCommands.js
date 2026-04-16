@@ -1,3 +1,5 @@
+const { ProcessingInstruction } = require("./index");
+
 let TestableAcfVersesOT = [
   ".bv Gênesis 1:3 ACF",
   ".bv Êxodo 1:3 ACF",
@@ -38,7 +40,7 @@ let TestableAcfVersesOT = [
   ".bv Sofonias 1:3 ACF",
   ".bv Ageu 1:3 ACF",
   ".bv Zacarias 1:3 ACF",
-  ".bv Malaquias 1:3 ACF"
+  ".bv Malaquias 1:3 ACF",
 ];
 
 let TestableAcfVersesNT = [
@@ -69,7 +71,38 @@ let TestableAcfVersesNT = [
   ".bv II João 1:2 ACF",
   ".bv III João 1:2 ACF",
   ".bv Judas 1:2 ACF",
-  ".bv Apocalipse 10:2 ACF"
+  ".bv Apocalipse 10:2 ACF",
+];
+
+let TestableAcfVersesGreek = [
+  ".bv Mateus 2:2 BYZ",
+  ".bv Marcos 2:2 BYZ",
+  ".bv Lucas 2:2 BYZ",
+  ".bv João 2:2 BYZ",
+  ".bv Atos 2:2 BYZ",
+  ".bv Romanos 2:2 BYZ",
+  ".bv I Coríntios 2:2 BYZ",
+  ".bv II Coríntios 2:2 BYZ",
+  ".bv Gálatas 2:2 BYZ",
+  ".bv Efésios 2:2 BYZ",
+  ".bv Filipenses 2:2 BYZ",
+  ".bv Colossenses 2:2 BYZ",
+  ".bv I Tessalonicenses 2:2 BYZ",
+  ".bv II Tessalonicenses 2:2 BYZ",
+  ".bv I Timóteo 2:2 BYZ",
+  ".bv II Timóteo 2:2 BYZ",
+  ".bv Tito 2:2 BYZ",
+  ".bv Filemon 1:4 BYZ",
+  ".bv Filemon 1:9 BYZ",
+  ".bv Hebreus 2:2 BYZ",
+  ".bv Tiago 1:12 BYZ",
+  ".bv I Pedro 1:2 BYZ",
+  ".bv II Pedro 1:2 BYZ",
+  ".bv I João 1:2 BYZ",
+  ".bv II João 1:2 BYZ",
+  ".bv III João 1:2 BYZ",
+  ".bv Judas 1:2 BYZ",
+  ".bv Apocalipse 10:2 BYZ",
 ];
 
 let TestableWpntVersesNT = [
@@ -100,7 +133,7 @@ let TestableWpntVersesNT = [
   ".bv II João 1:2 WPNT",
   ".bv III João 1:2 WPNT",
   ".bv Judas 1:2 WPNT",
-  ".bv Apocalipse 10:2 WPNT"
+  ".bv Apocalipse 10:2 WPNT",
 ];
 
 let TestableRwpCmtNT = [
@@ -131,5 +164,25 @@ let TestableRwpCmtNT = [
   ".bc II João 1:2 RWP",
   ".bc III João 1:2 RWP",
   ".bc Judas 1:2 RWP",
-  ".bc Apocalipse 10:2 RWP"
+  ".bc Apocalipse 10:2 RWP",
 ];
+
+for (let index = 0; index < TestableAcfVersesOT.length; index++) {
+  console.log(ProcessingInstruction(TestableAcfVersesOT[index]));
+}
+
+for (let index = 0; index < TestableAcfVersesNT.length; index++) {
+  console.log(ProcessingInstruction(TestableAcfVersesNT[index]));
+}
+
+for (let index = 0; index < TestableWpntVersesNT.length; index++) {
+  console.log(ProcessingInstruction(TestableWpntVersesNT[index]));
+}
+
+for (let index = 0; index < TestableRwpCmtNT.length; index++) {
+  console.log(ProcessingInstruction(TestableRwpCmtNT[index]));
+}
+
+for (let index = 0; index < TestableAcfVersesGreek.length; index++) {
+  console.log(ProcessingInstruction(TestableAcfVersesGreek[index]));
+}

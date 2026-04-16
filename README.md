@@ -1,58 +1,48 @@
-# Gilberto "A Discord Bot"
-
-EN: This bot, called \"Gilberto\" (from Wilbur \"Gilberto\" Norman Pickering), show Bible verses from WPNT (A New Translation of The New Testament Text Based on f³⁵ Manuscripts). Also, this bot, show verses from ACF (Almeida Corrigida Fiel 2007), a Portuguese version of the Bible based on Masoretic Texts and Textus Receptus. The bot was made to Portuguese users so the references will mostly be equated in Portuguese. Type .c and push Enter to show the commands for you.
-
-PTBR: Esse bot, chamado \"Gilberto\" (de Wilbur \"Gilberto\" Norman Pickering), mostra versos bíblicos da WPNT (Uma Nova Tradução do Novo Testamento Baseado nos manuscriptos da família f³⁵). Também, esse bot, mostra versos da ACF (Almeida Corrigida Fiel 2007), uma versão Portuguesa da Bíblia baseada no Texto Masorético e Textus Receptus. O bot foi feito para usuários da língua portuguesa. Por isso as referências são estilo portugues brasileiro i.e. João, Marcos, Gênesis, etc. Utilize .c para ver os comandos do Bot.
-
-# Contribution
-
-To contribute you must understand a few things: How Sqlite works, Javascript (Nodejs), and Discord API. Just make a pull request and it will be analized.
-
 # Commands
 
 **Comandos do bot // Bot commands =>**
 
-+ .hen for a description of the bot
-+ .hpt para uma descrição do bot
+- .hen for a description of the bot
+- .hpt para uma descrição do bot
 
 **Bible Description // Descrição da Edição Bíblica**
 
-+ .bd ACF para detalhes da ACF sendo usada
-+ .bd WPNT for details of this version being used
+- .bd ACF para detalhes da ACF sendo usada
+- .bd WPNT for details of this version being used
 
 **Commentary Description // Descrição do Comentário**
 
-+ .cd RWP para detalhes do comentário sendo usado
-+ .cd POOLE for details of this commentary being used
+- .cd RWP para detalhes do comentário sendo usado
+- .cd POOLE for details of this commentary being used
 
 **Bible Verse // Verso Bíblico**
 
-+ .bv João 1:1 ACF
-+ .bv Gênesis 1:1 ACF
-+ .bv João 13:16 WPNT
+- .bv João 1:1 ACF
+- .bv Gênesis 1:1 ACF
+- .bv João 13:16 WPNT
 
 **Bible Commentary // Comentário Bíblico**
 
-+ .bc João 1:1 RWP
-+ .bc Gênesis 1:1 POOLE
-+ .a Mostra todas as Bíblias disponíveis e Comentários Bíblicos
-+ .c para ver os comandos
-+ .iv para pegar um link permanente do servidor de discord do Prunch.org
+- .bc João 1:1 RWP
+- .bc Gênesis 1:1 POOLE
+- .a Mostra todas as Bíblias disponíveis e Comentários Bíblicos
+- .c para ver os comandos
+- .iv para pegar um link permanente do servidor de discord do Prunch.org
 
 **Bible Words Search // Busca Palavras na Bíblia**
 
-+ .bs amor,irmão,salvar,ovelha,... ACF João
-+ .bs amor,irmão,salvar,ovelha,... ACF Marcos
-+ .bs amor,irmão,salvar,ovelha,... ACF Gênesis
-+ .bs amor,irmão,salvar,ovelha,... ACF Apocalipse
-+ .bs love,Jesus,brothers WPNT Mateus
+- .bs amor,irmão,salvar,ovelha,... ACF João
+- .bs amor,irmão,salvar,ovelha,... ACF Marcos
+- .bs amor,irmão,salvar,ovelha,... ACF Gênesis
+- .bs amor,irmão,salvar,ovelha,... ACF Apocalipse
+- .bs love,Jesus,brothers WPNT Mateus
 
 **Extra Commands // Outros Comandos**
 
-+ .c para ver os comandos
-+ .iv para pegar um link permanente do servidor de discord do Prunch.org"
-+ .a Mostra todas as Bíblias disponíveis e Comentários Bíblicos
-+ .refs mostra as possibilidades de formatação das referências bíblicas
+- .c para ver os comandos
+- .iv para pegar um link permanente do servidor de discord do Prunch.org"
+- .a Mostra todas as Bíblias disponíveis e Comentários Bíblicos
+- .refs mostra as possibilidades de formatação das referências bíblicas
 
 # Biblical References Format // Formatos das Referências Bíblicas
 
