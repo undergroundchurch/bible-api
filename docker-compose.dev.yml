@@ -1,0 +1,16 @@
+version: '3.8'
+
+# Development override file
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  bible-api:
+    build:
+      target: development
+    environment:
+      - NODE_ENV=development
+      - BIBLE_API_PORT=3001
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: ["sh", "-c", "npm install && node api-server.js"]
