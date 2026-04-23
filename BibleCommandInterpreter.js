@@ -273,30 +273,35 @@ class BibleCommandInterpreter {
   }
 
   getVersesParsed(args, bible) {
-    let refsOsis = this.getOsis(args)
-    if (!refsOsis || refsOsis.length === 0) return []
-
-    // Use the first parsed reference group
-    let osisString = refsOsis[0].osis
-    let ranges = this.getRanges(osisString)
+    let dividedBySemi = args.split(';')
     let versesParsed = Array()
 
-    for (let index = 0; index < ranges.length; index++) {
-      const range = ranges[index]
+    for (let index = 0; index < dividedBySemi.length; index++) {
+      const shortCitation = dividedBySemi[index]
+      let refsOsis = this.getOsis(shortCitation)
+      if (!refsOsis || refsOsis.length === 0) return []
 
-      let book_number = constants.getBookNameById(range.book)
-      let chapter_number = range.chapter
-      let verse_number_start = range.from
-      let verse_number_end = range.to
+      // Use the first parsed reference group
+      let osisString = refsOsis[0].osis
+      let ranges = this.getRanges(osisString)
 
-      let verses = bible.findScriptureByRange(
-        book_number,
-        chapter_number,
-        verse_number_start,
-        verse_number_end
-      )
+      for (let index = 0; index < ranges.length; index++) {
+        const range = ranges[index]
 
-      versesParsed = versesParsed.concat(verses)
+        let book_number = constants.getBookNameById(range.book)
+        let chapter_number = range.chapter
+        let verse_number_start = range.from
+        let verse_number_end = range.to
+
+        let verses = bible.findScriptureByRange(
+          book_number,
+          chapter_number,
+          verse_number_start,
+          verse_number_end
+        )
+
+        versesParsed = versesParsed.concat(verses)
+      }
     }
 
     return versesParsed
