@@ -1,13 +1,13 @@
 const BibleVersionEnum = {
-  EMTV: "EMTV",
-  BYZ: "BYZ",
-  WPNT: "WPNT",
-  ACF: "ACF",
-  ITARIVE: "ITA",
-  FREMRTN: "FRE",
-  ISV: "ISV"
+  EMTV: 'EMTV',
+  BYZ: 'BYZ',
+  WPNT: 'WPNT',
+  ACF: 'ACF',
+  ITARIVE: 'ITA',
+  FREMRTN: 'FRE',
+  ISV: 'ISV',
 }
 
-Object.freeze(BibleVersionEnum);
+Object.freeze(BibleVersionEnum)
 
-module.exports.BibleVersionEnum = BibleVersionEnum;
+module.exports.BibleVersionEnum = BibleVersionEnum

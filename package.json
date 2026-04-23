@@ -25,7 +25,6 @@
     "better-sqlite3": "^12.9.0",
     "bible-passage-reference-parser": "^3.2.0",
     "moment": "^2.30.1",
-    "prompt-sync": "^4.2.0",
     "turndown": "^7.2.4",
     "xml2js": "^0.6.2"
   }

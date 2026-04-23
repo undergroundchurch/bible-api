@@ -1,6 +1,6 @@
-const Database = require('better-sqlite3');
-const verselib = require("./BibleVerse");
-const versions = require("./BibleVersionEnum");
+const Database = require('better-sqlite3')
+const verselib = require('./BibleVerse')
+const versions = require('./BibleVersionEnum')
 
 class BibleMedium {
   /**
@@ -8,7 +8,7 @@ class BibleMedium {
    * @param {str} dbpath DB Absolute Path (recommended).
    */
   constructor(dbpath) {
-    this.dbpath = dbpath;
+    this.dbpath = dbpath
   }
 
   /**
@@ -19,64 +19,73 @@ class BibleMedium {
    * @param {int} verse_number Verse number goes from 1 to n and Verse from 1 to m.
    */
   findScriptureBy(book_number, chapter_number, verse_number) {
-    let sql = `SELECT * FROM bible WHERE Book=${book_number} AND Chapter=${chapter_number} AND Verse=${verse_number};`;
-    let row = this.processSQL(sql);
-    console.log(sql);
+    let sql = `SELECT * FROM bible WHERE Book=${book_number} AND Chapter=${chapter_number} AND Verse=${verse_number};`
+    let row = this.processSQL(sql)
+    console.log(sql)
 
     if (row) {
-      return new verselib.Verse(row.Book, row.Chapter, row.Verse, row.Scripture);
+      return new verselib.Verse(row.Book, row.Chapter, row.Verse, row.Scripture)
     } else {
-      return new verselib.Verse(0, 0, 0, 'Scripture Not Found');
+      return new verselib.Verse(0, 0, 0, 'Scripture Not Found')
     }
   }
 
   selectMethod() {
     if (method == versions.BibleSearchTypeEnum.BOOK) {
-      return searchTextByBook(words, book);
+      return searchTextByBook(words, book)
     }
   }
-  
+
   searchTextBy(words, book_number) {
-    let aux = "(";
-    let sql_injection_barrier = RegExp(/\b(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|UPDATE|UNION( +ALL){0,1})\b/gim);
+    let aux = '('
+    let sql_injection_barrier = RegExp(
+      /\b(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|UPDATE|UNION( +ALL){0,1})\b/gim
+    )
 
     if (words instanceof Array) {
       for (let index = 0; index < words.length - 1; index++) {
-        const element = words[index];
+        const element = words[index]
         // Just a simple barrier against some types of injection, nothing too much sophisticated.
         if (sql_injection_barrier.test(element)) {
-          return null;
+          return null
         }
-        aux += `Scripture LIKE \"%${element}%\" OR `;
+        aux += `Scripture LIKE \"%${element}%\" OR `
       }
-      aux += `Scripture LIKE \"%${words[words.length - 1]}%\")`;
+      aux += `Scripture LIKE \"%${words[words.length - 1]}%\")`
     } else {
       if (sql_injection_barrier.test(words)) {
-        return null;
+        return null
       }
-      aux += `(Scripture LIKE \"%${words}%\")`;
+      aux += `(Scripture LIKE \"%${words}%\")`
     }
 
-    let sql = `SELECT * FROM bible WHERE Book=${book_number} AND ${aux} LIMIT 7;`;
-    console.log(sql);
+    let sql = `SELECT * FROM bible WHERE Book=${book_number} AND ${aux} LIMIT 7;`
+    console.log(sql)
 
-    let rows = this.processSQL(sql, 'ALL');
-    
+    let rows = this.processSQL(sql, 'ALL')
+
     if (rows) {
-      let listOfVerses = Array();
+      let listOfVerses = Array()
       for (let index = 0; index < rows.length; index++) {
-        const element = rows[index];
-        listOfVerses.push(new verselib.Verse(element.Book, element.Chapter, element.Verse, element.Scripture));
+        const element = rows[index]
+        listOfVerses.push(
+          new verselib.Verse(
+            element.Book,
+            element.Chapter,
+            element.Verse,
+            element.Scripture
+          )
+        )
       }
-      return listOfVerses;
+      return listOfVerses
     } else {
-      return [new verselib.Verse(0, 0, 0, 'Scripture Not Found')];
+      return [new verselib.Verse(0, 0, 0, 'Scripture Not Found')]
     }
   }
 
   findDetail() {
-    let sql = `SELECT * FROM details;`;
-    let row = this.processSQL(sql);
+    let sql = `SELECT * FROM details;`
+    let row = this.processSQL(sql)
     return new verselib.EditionDetail(
       row.Description,
       row.Abbreviation,
@@ -88,36 +97,36 @@ class BibleMedium {
       row.OT,
       row.NT,
       row.Strong
-    );
+    )
   }
 
   processSQL(sql, order = 'GET') {
-    let db = null;
+    let db = null
     try {
-      db = new Database(this.dbpath, { readonly: true });
+      db = new Database(this.dbpath, { readonly: true })
     } catch (error) {
-      console.log(error);
-      return null;
+      console.log(error)
+      return null
     }
-    let row = null;
+    let row = null
 
     try {
-      let stmt = db.prepare(sql);
+      let stmt = db.prepare(sql)
       if (order === 'GET') {
-        row = stmt.get();
+        row = stmt.get()
       } else if (order === 'ALL') {
-        row = stmt.all();
+        row = stmt.all()
       }
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
 
-    db.close();
-    return row;
+    db.close()
+    return row
   }
 }
 
-module.exports.BibleMedium = BibleMedium;
+module.exports.BibleMedium = BibleMedium
 
 // var path = require('path');
 // const dbpath = path.join(__dirname, '.', 'db/wpnt', 'wpnt.bblx');

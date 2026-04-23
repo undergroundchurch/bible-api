@@ -1,8 +1,8 @@
 const CommentaryVersionEnum = {
-  POOLE: "POOLE",
-  RWP: "RWP"
+  POOLE: 'POOLE',
+  RWP: 'RWP',
 }
 
-Object.freeze(CommentaryVersionEnum);
+Object.freeze(CommentaryVersionEnum)
 
-module.exports.CommentaryVersionEnum = CommentaryVersionEnum;
+module.exports.CommentaryVersionEnum = CommentaryVersionEnum
