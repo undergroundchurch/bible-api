@@ -6,6 +6,25 @@ Ask
 }
 ```
 
+Parse
+
+```
+[
+  {
+    book: "Matt",
+    chapter: 2,
+    from: 1,
+    to: 12,
+  },
+  {
+    book: "Matt",
+    chapter: 3,
+    from: 4,
+    to: 7,
+  },
+]
+```
+
 Answer
 
 ```
