@@ -122,6 +122,11 @@ class BibleCommandInterpreter {
     return bible.searchTextBy(args, book_number)
   }
 
+  /**
+   * @todo to be used later for a arch based on tasks for each verse
+   * @param {*} osis
+   * @returns {Array<String>}
+   */
   allVersesExtended(osis) {
     let res = []
     if (!osis) return res
@@ -189,6 +194,10 @@ class BibleCommandInterpreter {
     return res
   }
 
+  /**
+   * @param {*} osis
+   * @returns {Array<Object>}
+   */
   getRanges(osis) {
     let ranges = []
     if (!osis) return ranges
