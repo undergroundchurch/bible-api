@@ -76,3 +76,5 @@ yarn.lock
 
 # Heroku Env
 .env
+
+.vscode
