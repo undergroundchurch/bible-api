@@ -11,7 +11,6 @@ const constants = require('./BibleConstants')
 
 const handleBv = (args) => {
   let versesParsed = bci.parseRef(args)
-  let osis = cci.getOsis(args)
   let embed = buildVerseRichEmbed(versesParsed)
   return embed
 }

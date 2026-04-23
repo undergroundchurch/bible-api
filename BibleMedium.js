@@ -30,6 +30,35 @@ class BibleMedium {
     }
   }
 
+  findScriptureByRange(
+    book_number,
+    chapter_number,
+    verse_number_start,
+    verse_number_end
+  ) {
+    let sql = `SELECT * FROM bible WHERE Book=${book_number} AND Chapter=${chapter_number} AND Verse BETWEEN ${verse_number_start} AND ${verse_number_end};`
+    let rows = this.processSQL(sql, 'ALL')
+    console.log(sql)
+
+    if (rows) {
+      let listOfVerses = Array()
+      for (let index = 0; index < rows.length; index++) {
+        const element = rows[index]
+        listOfVerses.push(
+          new verselib.Verse(
+            element.Book,
+            element.Chapter,
+            element.Verse,
+            element.Scripture
+          )
+        )
+      }
+      return listOfVerses
+    } else {
+      return [new verselib.Verse(0, 0, 0, 'Scripture Not Found')]
+    }
+  }
+
   selectMethod() {
     if (method == versions.BibleSearchTypeEnum.BOOK) {
       return searchTextByBook(words, book)

@@ -189,34 +189,109 @@ class BibleCommandInterpreter {
     return res
   }
 
+  getRanges(osis) {
+    let ranges = []
+    if (!osis) return ranges
+
+    let parts = osis.split(',')
+    parts.forEach((part) => {
+      if (part.includes('-')) {
+        let rangeParts = part.split('-')
+        let start = rangeParts[0].split('.')
+        let end = rangeParts[1].split('.')
+
+        if (start.length < 3 || end.length < 3) return
+
+        let bStart = start[0]
+        let cStart = parseInt(start[1])
+        let vStart = parseInt(start[2])
+
+        let bEnd = end[0]
+        let cEnd = parseInt(end[1])
+        let vEnd = parseInt(end[2])
+
+        let bookNumber = constants.getBookNameById(bStart)
+        if (!bookNumber) return
+        let chapterCounts = constants.chapters[bookNumber]
+
+        if (bStart === bEnd) {
+          if (cStart === cEnd) {
+            ranges.push({
+              book: bStart,
+              chapter: cStart,
+              from: vStart,
+              to: vEnd,
+            })
+          } else {
+            // First chapter
+            ranges.push({
+              book: bStart,
+              chapter: cStart,
+              from: vStart,
+              to: chapterCounts[cStart - 1],
+            })
+            // Middle chapters
+            for (let c = cStart + 1; c < cEnd; c++) {
+              ranges.push({
+                book: bStart,
+                chapter: c,
+                from: 1,
+                to: chapterCounts[c - 1],
+              })
+            }
+            // Last chapter
+            ranges.push({
+              book: bStart,
+              chapter: cEnd,
+              from: 1,
+              to: vEnd,
+            })
+          }
+        }
+      } else {
+        let verseParts = part.split('.')
+        if (verseParts.length >= 3) {
+          ranges.push({
+            book: verseParts[0],
+            chapter: parseInt(verseParts[1]),
+            from: parseInt(verseParts[2]),
+            to: parseInt(verseParts[2]),
+          })
+        }
+      }
+    })
+    return ranges
+  }
+
   getVersesParsed(args, bible) {
     let refsOsis = this.getOsis(args)
     if (!refsOsis || refsOsis.length === 0) return []
 
     // Use the first parsed reference group
     let osisString = refsOsis[0].osis
-    let refsExtended = this.allVersesExtended(osisString)
+    let ranges = this.getRanges(osisString)
     let versesParsed = Array()
 
-    for (let index = 0; index < refsExtended.length; index++) {
-      const element = refsExtended[index].split('.')
-      
-      let book_number = constants.getBookNameById(element[0])
-      let chapter_number = parseInt(element[1])
-      let verse_number = parseInt(element[2])
+    for (let index = 0; index < ranges.length; index++) {
+      const range = ranges[index]
 
-      let verse = bible.findScriptureBy(
+      let book_number = constants.getBookNameById(range.book)
+      let chapter_number = range.chapter
+      let verse_number_start = range.from
+      let verse_number_end = range.to
+
+      let verses = bible.findScriptureByRange(
         book_number,
         chapter_number,
-        verse_number
+        verse_number_start,
+        verse_number_end
       )
 
-      versesParsed.push(verse)
+      versesParsed = versesParsed.concat(verses)
     }
 
     return versesParsed
   }
-
 }
 
 module.exports.BibleCommandInterpreter = BibleCommandInterpreter
