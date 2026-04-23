@@ -29,26 +29,33 @@ const isv = new bm.BibleMedium(
 )
 
 class BibleCommandInterpreter {
-  parseRef(args) {
-    let verses = null
-    args = args.trim()
+  parseRef(citations) {
+    let verses = Array()
+    let dividedBySemi = citations.split(';')
 
-    if (RegExp(versions.BibleVersionEnum.WPNT).test(args)) {
-      verses = this.getVersesParsed(args, wpnt)
-    } else if (RegExp(versions.BibleVersionEnum.ACF).test(args)) {
-      verses = this.getVersesParsed(args, acf)
-    } else if (RegExp(versions.BibleVersionEnum.EMTV).test(args)) {
-      verses = this.getVersesParsed(args, emtv)
-    } else if (RegExp(versions.BibleVersionEnum.BYZ).test(args)) {
-      verses = this.getVersesParsed(args, byz)
-    } else if (RegExp(versions.BibleVersionEnum.ITARIVE).test(args)) {
-      verses = this.getVersesParsed(args, ita)
-    } else if (RegExp(versions.BibleVersionEnum.FREMRTN).test(args)) {
-      verses = this.getVersesParsed(args, fre)
-    } else if (RegExp(versions.BibleVersionEnum.ISV).test(args)) {
-      verses = this.getVersesParsed(args, isv)
-    } else {
-      verses = this.getVersesParsed(args, acf)
+    for (let index = 0; index < dividedBySemi.length; index++) {
+      let args = dividedBySemi[index].trim()
+      let res = null
+
+      if (RegExp(versions.BibleVersionEnum.WPNT).test(args)) {
+        res = this.getVersesParsed(args, wpnt)
+      } else if (RegExp(versions.BibleVersionEnum.ACF).test(args)) {
+        res = this.getVersesParsed(args, acf)
+      } else if (RegExp(versions.BibleVersionEnum.EMTV).test(args)) {
+        res = this.getVersesParsed(args, emtv)
+      } else if (RegExp(versions.BibleVersionEnum.BYZ).test(args)) {
+        res = this.getVersesParsed(args, byz)
+      } else if (RegExp(versions.BibleVersionEnum.ITARIVE).test(args)) {
+        res = this.getVersesParsed(args, ita)
+      } else if (RegExp(versions.BibleVersionEnum.FREMRTN).test(args)) {
+        res = this.getVersesParsed(args, fre)
+      } else if (RegExp(versions.BibleVersionEnum.ISV).test(args)) {
+        res = this.getVersesParsed(args, isv)
+      } else {
+        res = this.getVersesParsed(args, acf)
+      }
+
+      verses.push(...res)
     }
 
     return verses
@@ -272,36 +279,32 @@ class BibleCommandInterpreter {
     return ranges
   }
 
-  getVersesParsed(args, bible) {
-    let dividedBySemi = args.split(';')
+  getVersesParsed(shortCitation, bible) {
     let versesParsed = Array()
 
-    for (let index = 0; index < dividedBySemi.length; index++) {
-      const shortCitation = dividedBySemi[index]
-      let refsOsis = this.getOsis(shortCitation)
-      if (!refsOsis || refsOsis.length === 0) return []
+    let refsOsis = this.getOsis(shortCitation)
+    if (!refsOsis || refsOsis.length === 0) return []
 
-      // Use the first parsed reference group
-      let osisString = refsOsis[0].osis
-      let ranges = this.getRanges(osisString)
+    // Use the first parsed reference group
+    let osisString = refsOsis[0].osis
+    let ranges = this.getRanges(osisString)
 
-      for (let index = 0; index < ranges.length; index++) {
-        const range = ranges[index]
+    for (let index = 0; index < ranges.length; index++) {
+      const range = ranges[index]
 
-        let book_number = constants.getBookNameById(range.book)
-        let chapter_number = range.chapter
-        let verse_number_start = range.from
-        let verse_number_end = range.to
+      let book_number = constants.getBookNameById(range.book)
+      let chapter_number = range.chapter
+      let verse_number_start = range.from
+      let verse_number_end = range.to
 
-        let verses = bible.findScriptureByRange(
-          book_number,
-          chapter_number,
-          verse_number_start,
-          verse_number_end
-        )
+      let verses = bible.findScriptureByRange(
+        book_number,
+        chapter_number,
+        verse_number_start,
+        verse_number_end
+      )
 
-        versesParsed = versesParsed.concat(verses)
-      }
+      versesParsed = versesParsed.concat(verses)
     }
 
     return versesParsed
