@@ -819,5 +819,6 @@ module.exports = {
   getBookTitleById: function (id) {
     return books[id]
   },
+  chapters: chapters,
   refs: refs,
 }
