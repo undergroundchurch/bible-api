@@ -47,22 +47,43 @@
       "properties": {
         "message": {
           "type": "string",
-          "example": "bv Mateus 2:2 BYZ"
+          "example": "bv Mateus 2:2 ACF;Mateus 2:2 BYZ"
         }
       }
     },
     "ProcessResponse": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "example": "matthew 2:2."
-          },
-          "value": {
-            "type": "string",
-            "example": "λεγοντες που εστιν ο τεχθεις βασιλευς των ιουδαιων..."
+      "type": "object",
+      "properties": {
+        "ACF": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "matthew 2:2."
+              },
+              "value": {
+                "type": "string",
+                "example": "verse..."
+              }
+            }
+          }
+        },
+        "BYZ": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "matthew 2:2."
+              },
+              "value": {
+                "type": "string",
+                "example": "verse..."
+              }
+            }
           }
         }
       }

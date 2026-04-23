@@ -11,7 +11,12 @@ const constants = require('./BibleConstants')
 
 const handleBv = (args) => {
   let versesParsed = bci.parseRef(args)
-  let embed = buildVerseRichEmbed(versesParsed)
+  let embed = {}
+  const keys = Object.keys(versesParsed)
+  for (let index = 0; index < keys.length; index++) {
+    const element = versesParsed[keys[index]]
+    embed[keys[index]] = buildVerseRichEmbed(element)
+  }
   return embed
 }
 
