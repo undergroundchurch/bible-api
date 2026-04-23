@@ -30,32 +30,34 @@ const isv = new bm.BibleMedium(
 
 class BibleCommandInterpreter {
   parseRef(citations) {
-    let verses = Array()
+    let verses = {}
     let dividedBySemi = citations.split(';')
 
     for (let index = 0; index < dividedBySemi.length; index++) {
       let args = dividedBySemi[index].trim()
       let res = null
+      let bible = { source: null, label: null }
 
       if (RegExp(versions.BibleVersionEnum.WPNT).test(args)) {
-        res = this.getVersesParsed(args, wpnt)
+        bible = { source: wpnt, label: versions.BibleVersionEnum.WPNT }
       } else if (RegExp(versions.BibleVersionEnum.ACF).test(args)) {
-        res = this.getVersesParsed(args, acf)
+        bible = { source: acf, label: versions.BibleVersionEnum.ACF }
       } else if (RegExp(versions.BibleVersionEnum.EMTV).test(args)) {
-        res = this.getVersesParsed(args, emtv)
+        bible = { source: emtv, label: versions.BibleVersionEnum.EMTV }
       } else if (RegExp(versions.BibleVersionEnum.BYZ).test(args)) {
-        res = this.getVersesParsed(args, byz)
+        bible = { source: byz, label: versions.BibleVersionEnum.BYZ }
       } else if (RegExp(versions.BibleVersionEnum.ITARIVE).test(args)) {
-        res = this.getVersesParsed(args, ita)
+        bible = { source: ita, label: versions.BibleVersionEnum.ITARIVE }
       } else if (RegExp(versions.BibleVersionEnum.FREMRTN).test(args)) {
-        res = this.getVersesParsed(args, fre)
+        bible = { source: fre, label: versions.BibleVersionEnum.FREMRTN }
       } else if (RegExp(versions.BibleVersionEnum.ISV).test(args)) {
-        res = this.getVersesParsed(args, isv)
+        bible = { source: isv, label: versions.BibleVersionEnum.ISV }
       } else {
-        res = this.getVersesParsed(args, acf)
+        bible = { source: acf, label: versions.BibleVersionEnum.ACF }
       }
 
-      verses.push(...res)
+      res = this.getVersesParsed(args, bible.source)
+      verses[bible.label] = res
     }
 
     return verses
