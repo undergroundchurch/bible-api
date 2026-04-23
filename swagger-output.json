@@ -1,0 +1,71 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Bible API",
+    "version": "1.0.0",
+    "description": "API for processing Bible commands using ProcessingInstruction"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/process": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Process a Bible command",
+            "schema": {
+              "$ref": "#/definitions/ProcessRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ProcessResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ProcessRequest": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "bv Mateus 2:2 BYZ"
+        }
+      }
+    },
+    "ProcessResponse": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "matthew 2:2."
+          },
+          "value": {
+            "type": "string",
+            "example": "λεγοντες που εστιν ο τεχθεις βασιλευς των ιουδαιων..."
+          }
+        }
+      }
+    }
+  }
+}
