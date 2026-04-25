@@ -1,5 +1,4 @@
 const constants = require('./BibleConstants')
-const dateformatter = require('./MomentUtil')
 const TurndownService = require('turndown')
 const turndownService = new TurndownService()
 
