@@ -21,7 +21,6 @@ class BibleMedium {
   findScriptureBy(book_number, chapter_number, verse_number) {
     let sql = `SELECT * FROM bible WHERE Book=${book_number} AND Chapter=${chapter_number} AND Verse=${verse_number};`
     let row = this.processSQL(sql)
-    console.log(sql)
 
     if (row) {
       return new verselib.Verse(row.Book, row.Chapter, row.Verse, row.Scripture)
@@ -38,7 +37,6 @@ class BibleMedium {
   ) {
     let sql = `SELECT * FROM bible WHERE Book=${book_number} AND Chapter=${chapter_number} AND Verse BETWEEN ${verse_number_start} AND ${verse_number_end};`
     let rows = this.processSQL(sql, 'ALL')
-    console.log(sql)
 
     if (rows) {
       let listOfVerses = Array()
@@ -89,7 +87,6 @@ class BibleMedium {
     }
 
     let sql = `SELECT * FROM bible WHERE Book=${book_number} AND ${aux} LIMIT 7;`
-    console.log(sql)
 
     let rows = this.processSQL(sql, 'ALL')
 

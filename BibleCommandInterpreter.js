@@ -29,6 +29,30 @@ const isv = new bm.BibleMedium(
 )
 
 class BibleCommandInterpreter {
+  whichPublisher(args) {
+    let bible = { source: null, label: null }
+
+    if (RegExp(versions.BibleVersionEnum.WPNT).test(args)) {
+      bible = { source: wpnt, label: versions.BibleVersionEnum.WPNT }
+    } else if (RegExp(versions.BibleVersionEnum.ACF).test(args)) {
+      bible = { source: acf, label: versions.BibleVersionEnum.ACF }
+    } else if (RegExp(versions.BibleVersionEnum.EMTV).test(args)) {
+      bible = { source: emtv, label: versions.BibleVersionEnum.EMTV }
+    } else if (RegExp(versions.BibleVersionEnum.BYZ).test(args)) {
+      bible = { source: byz, label: versions.BibleVersionEnum.BYZ }
+    } else if (RegExp(versions.BibleVersionEnum.ITARIVE).test(args)) {
+      bible = { source: ita, label: versions.BibleVersionEnum.ITARIVE }
+    } else if (RegExp(versions.BibleVersionEnum.FREMRTN).test(args)) {
+      bible = { source: fre, label: versions.BibleVersionEnum.FREMRTN }
+    } else if (RegExp(versions.BibleVersionEnum.ISV).test(args)) {
+      bible = { source: isv, label: versions.BibleVersionEnum.ISV }
+    } else {
+      bible = { source: acf, label: versions.BibleVersionEnum.ACF }
+    }
+
+    return bible
+  }
+
   parseRef(citations) {
     let verses = {}
     let dividedBySemi = citations.split(';')
@@ -36,25 +60,7 @@ class BibleCommandInterpreter {
     for (let index = 0; index < dividedBySemi.length; index++) {
       let args = dividedBySemi[index].trim()
       let res = null
-      let bible = { source: null, label: null }
-
-      if (RegExp(versions.BibleVersionEnum.WPNT).test(args)) {
-        bible = { source: wpnt, label: versions.BibleVersionEnum.WPNT }
-      } else if (RegExp(versions.BibleVersionEnum.ACF).test(args)) {
-        bible = { source: acf, label: versions.BibleVersionEnum.ACF }
-      } else if (RegExp(versions.BibleVersionEnum.EMTV).test(args)) {
-        bible = { source: emtv, label: versions.BibleVersionEnum.EMTV }
-      } else if (RegExp(versions.BibleVersionEnum.BYZ).test(args)) {
-        bible = { source: byz, label: versions.BibleVersionEnum.BYZ }
-      } else if (RegExp(versions.BibleVersionEnum.ITARIVE).test(args)) {
-        bible = { source: ita, label: versions.BibleVersionEnum.ITARIVE }
-      } else if (RegExp(versions.BibleVersionEnum.FREMRTN).test(args)) {
-        bible = { source: fre, label: versions.BibleVersionEnum.FREMRTN }
-      } else if (RegExp(versions.BibleVersionEnum.ISV).test(args)) {
-        bible = { source: isv, label: versions.BibleVersionEnum.ISV }
-      } else {
-        bible = { source: acf, label: versions.BibleVersionEnum.ACF }
-      }
+      let bible = this.whichPublisher(args)
 
       res = this.getVersesParsed(args, bible.source)
       verses[bible.label] = res

@@ -78,3 +78,5 @@ yarn.lock
 .env
 
 .vscode
+
+com.chrome.devtools.json

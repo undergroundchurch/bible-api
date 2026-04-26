@@ -136,6 +136,21 @@ function buildVerseRichEmbed(versesParsed) {
   }
 }
 
+const handleSegments = (segments) => {
+  let result = {}
+  for (const segment of segments) {
+    const { book, chapter, from, to, publisher } = segment
+    const bible = bci.whichPublisher(publisher || '')
+    const verses = bible.source.findScriptureByRange(book, chapter, from, to)
+
+    if (!result[bible.label]) {
+      result[bible.label] = []
+    }
+    result[bible.label] = result[bible.label].concat(verses)
+  }
+  return result
+}
+
 const commandsMeta = {
   bv: handleBv,
   bd: handleBd,
@@ -146,6 +161,7 @@ const commandsMeta = {
   a: handleA,
   o: handleOsis,
   refs: handleRefs,
+  segments: handleSegments,
 }
 
 module.exports = { ...commandsMeta }

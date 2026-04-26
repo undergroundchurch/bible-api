@@ -6,4 +6,9 @@ function ProcessingInstruction(msg) {
   return commandsMeta[command](args)
 }
 
+function ProcessingSegments(segments) {
+  return commandsMeta['segments'](segments)
+}
+
 module.exports.ProcessingInstruction = ProcessingInstruction
+module.exports.ProcessingSegments = ProcessingSegments
