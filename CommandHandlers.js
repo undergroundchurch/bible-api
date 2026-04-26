@@ -138,16 +138,69 @@ function buildVerseRichEmbed(versesParsed) {
 
 const handleSegments = (segments) => {
   let result = {}
-  for (const segment of segments) {
-    const { book, chapter, from, to, publisher } = segment
+  let errors = []
+
+  for (let i = 0; i < segments.length; i++) {
+    const segment = segments[i]
+    let { book, chapter, from, to, publisher } = segment
+
+    // Convert book name to number if necessary
+    let bookId = parseInt(book)
+    if (isNaN(bookId)) {
+      bookId =
+        constants.getBookNameById(book) ||
+        constants.getSearchableBookNameById(book)
+    }
+
+    // Basic validation for book
+    if (!bookId || !constants.chapters[bookId]) {
+      errors.push(`Segment ${i}: Invalid or missing book (${book})`)
+      continue
+    }
+
+    // Ensure chapter and verses are numbers
+    const nChapter = parseInt(chapter)
+    const nFrom = from ? parseInt(from) : 1
+    const nTo = to ? parseInt(to) : null // will default later
+
+    if (isNaN(nChapter) || nChapter < 1 || nChapter > constants.chapters[bookId].length) {
+      errors.push(`Segment ${i}: Invalid or missing chapter (${chapter}) for book ${bookId}`)
+      continue
+    }
+
+    const maxVerses = constants.chapters[bookId][nChapter - 1]
+    const finalTo = nTo === null ? maxVerses : nTo
+
+    if (isNaN(nFrom) || nFrom < 1 || nFrom > maxVerses) {
+      errors.push(`Segment ${i}: Invalid 'from' verse ${from} for book ${bookId} chapter ${nChapter}`)
+      continue
+    }
+    if (isNaN(finalTo) || finalTo < 1 || finalTo > maxVerses) {
+      errors.push(`Segment ${i}: Invalid 'to' verse ${to} for book ${bookId} chapter ${nChapter}`)
+      continue
+    }
+    if (nFrom > finalTo) {
+      errors.push(`Segment ${i}: 'from' verse ${nFrom} cannot be greater than 'to' verse ${finalTo}`)
+      continue
+    }
+
     const bible = bci.whichPublisher(publisher || '')
-    const verses = bible.source.findScriptureByRange(book, chapter, from, to)
+    const verses = bible.source.findScriptureByRange(bookId, nChapter, nFrom, finalTo)
 
     if (!result[bible.label]) {
       result[bible.label] = []
     }
     result[bible.label] = result[bible.label].concat(verses)
   }
+
+  if (errors.length > 0 && Object.keys(result).length === 0) {
+    return { error: 'Validation failed', details: errors }
+  }
+
+  if (errors.length > 0) {
+    result._errors = errors
+  }
+
   return result
 }
 

@@ -50,24 +50,19 @@ app.post('/process', (req, res) => {
       schema: { $ref: '#/definitions/ProcessResponse' }
     }
   */
-  const { segments, message } = req.body
+  const { segments } = req.body
   logger.info(`Processing request: ${JSON.stringify(req.body)}`)
   try {
     if (segments && Array.isArray(segments)) {
       const result = ProcessingSegments(segments)
       logger.info(`Processing segments result: ${JSON.stringify(result)}`)
+      if (result.error) {
+        return res.status(400).json(result)
+      }
       return res.json(result)
     }
 
-    if (message) {
-      const result = ProcessingInstruction(message)
-      logger.info(`Processing message result: ${JSON.stringify(result)}`)
-      return res.json(result)
-    }
-
-    return res
-      .status(400)
-      .json({ error: 'Segments (array) or message (string) are required' })
+    return res.status(400).json({ error: 'Segments (array) are required' })
   } catch (error) {
     console.error(error)
     res
