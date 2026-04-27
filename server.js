@@ -51,11 +51,10 @@ app.post('/process', (req, res) => {
     }
   */
   const { segments } = req.body
-  logger.info(`Processing request: ${JSON.stringify(req.body)}`)
+  logger.info(`Processing request: ${JSON.stringify(req.body, null, 2)}`)
   try {
     if (segments && Array.isArray(segments)) {
       const result = ProcessingSegments(segments)
-      logger.info(`Processing segments result: ${JSON.stringify(result)}`)
       if (result.error) {
         return res.status(400).json(result)
       }
