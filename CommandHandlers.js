@@ -137,10 +137,16 @@ function buildVerseRichEmbed(versesParsed) {
 }
 
 function removeScriptureSupport(verses) {
-  return verses?.map((v) => ({
+  let versesMap = verses?.map((v) => ({
     ...v,
-    scripture: String(v?.scripture).replace(/<[^>]*>/g, ''),
+    scripture: String(v?.scripture)
+      .replace(/<[^>]*>/g, '')
+      .replace(/\\cf\d+\s*\\up\d+\s*\d+\s*\\cf\d+\s*\\up\d+/g, '')
+      .replace(/\\[a-z]+\d*/gi, '')
+      .trim(),
   }))
+
+  return versesMap
 }
 
 const handleSegments = (segments) => {
