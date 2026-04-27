@@ -23,8 +23,11 @@
   },
   "homepage": "https://github.com/undergroundchurch/bible-api#readme",
   "dependencies": {
+    "@bull-board/api": "^7.0.0",
+    "@bull-board/express": "^7.0.0",
     "better-sqlite3": "^12.9.0",
     "bible-passage-reference-parser": "^3.2.0",
+    "bullmq": "^5.76.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "moment": "^2.30.1",

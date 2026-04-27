@@ -4,6 +4,10 @@ const express = require('express')
 const logger = require('./Logging')
 const swaggerUi = require('swagger-ui-express')
 const { ProcessingInstruction, ProcessingSegments } = require('./index')
+const { createBullBoard } = require('@bull-board/api')
+const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter')
+const { ExpressAdapter } = require('@bull-board/express')
+const { segmentsQueue } = require('./workers')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -20,7 +24,18 @@ if (fs.existsSync(swaggerFile)) {
   console.warn('Swagger file not found. Run "node swagger.js" first.')
 }
 
-app.post('/process', (req, res) => {
+// BullMQ Dashboard
+const serverAdapter = new ExpressAdapter()
+serverAdapter.setBasePath('/admin/queues')
+
+createBullBoard({
+  queues: [new BullMQAdapter(segmentsQueue)],
+  serverAdapter: serverAdapter,
+})
+
+app.use('/admin/queues', serverAdapter.getRouter())
+
+app.post('/process', async (req, res) => {
   /* 
     #swagger.parameters['body'] = {
       in: 'body',
@@ -54,7 +69,7 @@ app.post('/process', (req, res) => {
   logger.info(`Processing request: ${JSON.stringify(req.body, null, 2)}`)
   try {
     if (segments && Array.isArray(segments)) {
-      const result = ProcessingSegments(segments)
+      const result = await ProcessingSegments(segments)
       if (result.error) {
         return res.status(400).json(result)
       }
@@ -73,4 +88,7 @@ app.post('/process', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`)
   console.log(`Swagger docs available at http://localhost:${port}/api-docs`)
+  console.log(
+    `BullMQ dashboard available at http://localhost:${port}/admin/queues`
+  )
 })
