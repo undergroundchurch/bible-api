@@ -9,6 +9,7 @@
   },
   "scripts": {
     "postinstall": "npm rebuild better-sqlite3",
+    "dev": "node swagger.js && node server.js",
     "start": "node swagger.js && node server.js"
   },
   "repository": {
