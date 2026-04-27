@@ -136,6 +136,13 @@ function buildVerseRichEmbed(versesParsed) {
   }
 }
 
+function removeScriptureSupport(verses) {
+  return verses?.map((v) => ({
+    ...v,
+    scripture: String(v?.scripture).replace(/<[^>]*>/g, ''),
+  }))
+}
+
 const handleSegments = (segments) => {
   let result = {}
   let errors = []
@@ -163,8 +170,14 @@ const handleSegments = (segments) => {
     const nFrom = from ? parseInt(from) : 1
     const nTo = to ? parseInt(to) : null // will default later
 
-    if (isNaN(nChapter) || nChapter < 1 || nChapter > constants.chapters[bookId].length) {
-      errors.push(`Segment ${i}: Invalid or missing chapter (${chapter}) for book ${bookId}`)
+    if (
+      isNaN(nChapter) ||
+      nChapter < 1 ||
+      nChapter > constants.chapters[bookId].length
+    ) {
+      errors.push(
+        `Segment ${i}: Invalid or missing chapter (${chapter}) for book ${bookId}`
+      )
       continue
     }
 
@@ -172,20 +185,28 @@ const handleSegments = (segments) => {
     const finalTo = nTo === null ? maxVerses : nTo
 
     if (isNaN(nFrom) || nFrom < 1 || nFrom > maxVerses) {
-      errors.push(`Segment ${i}: Invalid 'from' verse ${from} for book ${bookId} chapter ${nChapter}`)
+      errors.push(
+        `Segment ${i}: Invalid 'from' verse ${from} for book ${bookId} chapter ${nChapter}`
+      )
       continue
     }
     if (isNaN(finalTo) || finalTo < 1 || finalTo > maxVerses) {
-      errors.push(`Segment ${i}: Invalid 'to' verse ${to} for book ${bookId} chapter ${nChapter}`)
+      errors.push(
+        `Segment ${i}: Invalid 'to' verse ${to} for book ${bookId} chapter ${nChapter}`
+      )
       continue
     }
     if (nFrom > finalTo) {
-      errors.push(`Segment ${i}: 'from' verse ${nFrom} cannot be greater than 'to' verse ${finalTo}`)
+      errors.push(
+        `Segment ${i}: 'from' verse ${nFrom} cannot be greater than 'to' verse ${finalTo}`
+      )
       continue
     }
 
     const bible = bci.whichPublisher(publisher || '')
-    const verses = bible.source.findScriptureByRange(bookId, nChapter, nFrom, finalTo)
+    const verses = removeScriptureSupport(
+      bible.source.findScriptureByRange(bookId, nChapter, nFrom, finalTo)
+    )
 
     if (!result[bible.label]) {
       result[bible.label] = []
