@@ -3,7 +3,7 @@ const { segments: handleSegments } = require('./CommandHandlers')
 
 const connection = {
   host: process.env.REDIS_HOST || 'localhost',
-  port: parseInt(process.env.REDIS_PORT || '6380'),
+  port: parseInt(process.env.REDIS_PORT || '6379'),
 }
 
 const segmentsQueue = new Queue('segments', { connection })
