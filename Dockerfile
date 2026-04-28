@@ -1,26 +1,19 @@
 FROM node:22-bullseye-slim
 
-# Install necessary build tools for native dependencies like better-sqlite3
-RUN apt-get update && apt-get install -y \
-    python3 \
-    make \
-    g++ \
-    && rm -rf /var/lib/apt/lists/*
+# Install git and build tools required for native dependencies
+RUN apt-get update && apt-get install -y git python3 make g++ && rm -rf /var/lib/apt/lists/*
 
-# Create app directory
-WORKDIR /usr/src/app
+# Set working directory
+WORKDIR /app
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json ./
+# Clone the bible-api repository (requires SSH keys to be available at build time)
+RUN git clone git@github.com:undergroundchurch/bible-api.git .
 
-RUN npm install
+# Install application dependencies
+RUN npm ci
 
-# Bundle app source
-COPY . .
-
-# Expose port 3000
+# Expose the port the app runs on (adjust if different)
 EXPOSE 3000
 
 # Start the application
-CMD [ "npm", "start" ]
+CMD ["npm", "start"]

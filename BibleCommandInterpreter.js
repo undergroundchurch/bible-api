@@ -72,23 +72,9 @@ class BibleCommandInterpreter {
   parseWords(args) {
     let verses = null
     args = args.trim()
-
-    if (RegExp(versions.BibleVersionEnum.WPNT).test(args)) {
-      verses = this.splitArguments(args, versions.BibleVersionEnum.WPNT, wpnt)
-    } else if (RegExp(versions.BibleVersionEnum.ACF).test(args)) {
-      verses = this.splitArguments(args, versions.BibleVersionEnum.ACF, acf)
-    } else if (RegExp(versions.BibleVersionEnum.EMTV).test(args)) {
-      verses = this.splitArguments(args, versions.BibleVersionEnum.EMTV, emtv)
-    } else if (RegExp(versions.BibleVersionEnum.BYZ).test(args)) {
-      verses = this.splitArguments(args, versions.BibleVersionEnum.BYZ, byz)
-    } else if (RegExp(versions.BibleVersionEnum.ITARIVE).test(args)) {
-      verses = this.splitArguments(args, versions.BibleVersionEnum.ITARIVE, ita)
-    } else if (RegExp(versions.BibleVersionEnum.FREMRTN).test(args)) {
-      verses = this.splitArguments(args, versions.BibleVersionEnum.FREMRTN, fre)
-    } else if (RegExp(versions.BibleVersionEnum.ISV).test(args)) {
-      verses = this.splitArguments(args, versions.BibleVersionEnum.ISV, isv)
-    }
-
+    const bible = this.whichPublisher(args)
+    res = this.getVersesParsed(args, bible.source)
+    verses[bible.label] = res
     return verses
   }
 
