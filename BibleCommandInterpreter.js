@@ -70,12 +70,9 @@ class BibleCommandInterpreter {
   }
 
   parseWords(args) {
-    let verses = null
     args = args.trim()
     const bible = this.whichPublisher(args)
-    res = this.getVersesParsed(args, bible.source)
-    verses[bible.label] = res
-    return verses
+    return this.getVersesParsed(args, bible.source)
   }
 
   splitArguments(args, edition_version, bible) {
