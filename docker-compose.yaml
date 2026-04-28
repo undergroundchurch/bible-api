@@ -2,7 +2,7 @@ services:
   api:
     build: .
     ports:
-      - '3000:3001'
+      - '3001:3001'
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
