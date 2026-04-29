@@ -13,7 +13,7 @@ RUN git clone git@github.com:undergroundchurch/bible-api.git .
 RUN npm ci
 
 # Expose the port the app runs on (adjust if different)
-EXPOSE 3000
+EXPOSE 3001
 
 # Start the application
 CMD ["npm", "start"]
