@@ -74,7 +74,7 @@ let TestableAcfVersesNT = [
   'bv Apocalipse 10:2 ACF',
 ]
 
-let TestableAcfVersesGreek = [
+let TestableByzVersesGreek = [
   'bv Mateus 2:2 BYZ',
   'bv Marcos 2:2 BYZ',
   'bv Lucas 2:2 BYZ',
@@ -103,6 +103,37 @@ let TestableAcfVersesGreek = [
   'bv III João 1:2 BYZ',
   'bv Judas 1:2 BYZ',
   'bv Apocalipse 10:2 BYZ',
+]
+
+let TestableOgntVersesGreek = [
+  'bv Mateus 2:2 OGNT',
+  'bv Marcos 2:2 OGNT',
+  'bv Lucas 2:2 OGNT',
+  'bv João 2:2 OGNT',
+  'bv Atos 2:2 OGNT',
+  'bv Romanos 2:2 OGNT',
+  'bv I Coríntios 2:2 OGNT',
+  'bv II Coríntios 2:2 OGNT',
+  'bv Gálatas 2:2 OGNT',
+  'bv Efésios 2:2 OGNT',
+  'bv Filipenses 2:2 OGNT',
+  'bv Colossenses 2:2 OGNT',
+  'bv I Tessalonicenses 2:2 OGNT',
+  'bv II Tessalonicenses 2:2 OGNT',
+  'bv I Timóteo 2:2 OGNT',
+  'bv II Timóteo 2:2 OGNT',
+  'bv Tito 2:2 OGNT',
+  'bv Filemon 1:4 OGNT',
+  'bv Filemon 1:9 OGNT',
+  'bv Hebreus 2:2 OGNT',
+  'bv Tiago 1:12 OGNT',
+  'bv I Pedro 1:2 OGNT',
+  'bv II Pedro 1:2 OGNT',
+  'bv I João 1:2 OGNT',
+  'bv II João 1:2 OGNT',
+  'bv III João 1:2 OGNT',
+  'bv Judas 1:2 OGNT',
+  'bv Apocalipse 10:2 OGNT',
 ]
 
 let TestableWpntVersesNT = [
@@ -183,6 +214,16 @@ for (let index = 0; index < TestableRwpCmtNT.length; index++) {
   console.log(ProcessingInstruction(TestableRwpCmtNT[index]))
 }
 
-for (let index = 0; index < TestableAcfVersesGreek.length; index++) {
-  console.log(ProcessingInstruction(TestableAcfVersesGreek[index]))
+for (let index = 0; index < TestableAcfVersesNT.length; index++) {
+  console.log(ProcessingInstruction(TestableAcfVersesNT[index]))
 }
+
+for (let index = 0; index < TestableByzVersesGreek.length; index++) {
+  console.log(ProcessingInstruction(TestableByzVersesGreek[index]))
+}
+
+for (let index = 0; index < TestableOgntVersesGreek.length; index++) {
+  console.log(ProcessingInstruction(TestableOgntVersesGreek[index]))
+}
+
+process.exit(1)

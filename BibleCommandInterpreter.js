@@ -27,6 +27,9 @@ const fre = new bm.BibleMedium(
 const isv = new bm.BibleMedium(
   (dbpath = path.join(__dirname, '.', 'db/isv', 'ISV.bbl.mybible'))
 )
+const ognt = new bm.BibleMedium(
+  (dbpath = path.join(__dirname, '.', 'db/ognt', 'OpenGNT.bbl.mybible'))
+)
 
 class BibleCommandInterpreter {
   whichPublisher(args) {
@@ -46,6 +49,8 @@ class BibleCommandInterpreter {
       bible = { source: fre, label: versions.BibleVersionEnum.FREMRTN }
     } else if (RegExp(versions.BibleVersionEnum.ISV).test(args)) {
       bible = { source: isv, label: versions.BibleVersionEnum.ISV }
+    } else if (RegExp(versions.BibleVersionEnum.OGNT).test(args)) {
+      bible = { source: ognt, label: versions.BibleVersionEnum.OGNT }
     } else {
       bible = { source: acf, label: versions.BibleVersionEnum.ACF }
     }
