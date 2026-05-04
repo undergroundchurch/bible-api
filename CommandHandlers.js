@@ -136,15 +136,27 @@ function buildVerseRichEmbed(versesParsed) {
   }
 }
 
-function removeScriptureSupport(verses) {
-  let versesMap = verses?.map((v) => ({
-    ...v,
-    scripture: String(v?.scripture)
-      .replace(/<[^>]*>/g, '')
-      .replace(/\\cf\d+\s*\\up\d+\s*\d+\s*\\cf\d+\s*\\up\d+/g, '')
-      .replace(/\\[a-z]+\d*/gi, '')
-      .trim(),
-  }))
+function removeScriptureSupport(verses, publisher) {
+  let versesMap = verses?.map((v) => {
+    let scripture = String(v?.scripture || '')
+
+    if (publisher === 'OGNT') {
+      scripture = scripture.replace(/<Q>(.*?)<q>/g, (match) => {
+        const g = match.match(/<G>([^<]+)/)?.[1] || ''
+        // const e = match.match(/<E>([^<]+)/)?.[1] || ''
+        return g // ? `${g} ${e}` : g
+      })
+    }
+
+    return {
+      ...v,
+      scripture: scripture
+        .replace(/<[^>]*>/g, '')
+        .replace(/\\cf\d+\s*\\up\d+\s*\d+\s*\\cf\d+\s*\\up\d+/g, '')
+        .replace(/\\[a-z]+\d*/gi, '')
+        .trim(),
+    }
+  })
 
   return versesMap
 }
@@ -211,7 +223,8 @@ const handleSegments = (segments) => {
 
     const bible = bci.whichPublisher(publisher || '')
     const verses = removeScriptureSupport(
-      bible.source.findScriptureByRange(bookId, nChapter, nFrom, finalTo)
+      bible.source.findScriptureByRange(bookId, nChapter, nFrom, finalTo),
+      publisher
     )
 
     if (!result[bible.label]) {
