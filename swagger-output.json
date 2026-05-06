@@ -11,7 +11,7 @@
     "http"
   ],
   "paths": {
-    "/process": {
+    "/api/process": {
       "post": {
         "description": "",
         "parameters": [
