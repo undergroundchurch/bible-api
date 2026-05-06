@@ -35,7 +35,7 @@ createBullBoard({
 
 app.use('/admin/queues', serverAdapter.getRouter())
 
-app.post('/process', async (req, res) => {
+app.post('/api/process', async (req, res) => {
   /* 
     #swagger.parameters['body'] = {
       in: 'body',
