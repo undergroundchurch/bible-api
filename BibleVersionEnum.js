@@ -6,6 +6,7 @@ const BibleVersionEnum = {
   ITARIVE: 'ITA',
   FREMRTN: 'FRE',
   ISV: 'ISV',
+  OGNT: 'OGNT',
 }
 
 Object.freeze(BibleVersionEnum)

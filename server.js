@@ -1,16 +1,56 @@
 const fs = require('fs')
+const http = require('http')
 const cors = require('cors')
 const express = require('express')
+const { Server } = require('socket.io')
 const logger = require('./Logging')
 const swaggerUi = require('swagger-ui-express')
-const { ProcessingInstruction, ProcessingSegments } = require('./index')
+const { ProcessingInstruction, ProcessingSegments, ProcessingSegmentsAsync } = require('./index')
 const { createBullBoard } = require('@bull-board/api')
 const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter')
 const { ExpressAdapter } = require('@bull-board/express')
-const { segmentsQueue } = require('./workers')
+const { segmentsQueue, computeStatisticsQueue, segmentsQueueEvents, addComputeStatisticsJob, computeStatisticsQueueEvents } = require('./workers')
 
 const app = express()
+const server = http.createServer(app)
+const io = new Server(server, { cors: { origin: '*' } })
+
 const port = process.env.PORT || 3001
+
+io.on('connection', (socket) => {
+  logger.info(`WebSocket connected: ${socket.id}`)
+  socket.on('disconnect', () => {
+    logger.info(`WebSocket disconnected: ${socket.id}`)
+  })
+})
+
+segmentsQueueEvents.on('completed', ({ jobId, returnvalue }) => {
+  try {
+    const parsedResult = typeof returnvalue === 'string' ? JSON.parse(returnvalue) : returnvalue
+    io.emit('process-completed', { jobId, result: parsedResult })
+  } catch (err) {
+    logger.error(`Error parsing process-completed result for job ${jobId}: ${err.message}`)
+    io.emit('process-completed', { jobId, result: returnvalue })
+  }
+})
+
+segmentsQueueEvents.on('failed', ({ jobId, failedReason }) => {
+  io.emit('process-failed', { jobId, error: failedReason })
+})
+
+computeStatisticsQueueEvents.on('completed', ({ jobId, returnvalue }) => {
+  try {
+    const parsedResult = typeof returnvalue === 'string' ? JSON.parse(returnvalue) : returnvalue
+    io.emit('compute-statistics-completed', { jobId, result: parsedResult })
+  } catch (err) {
+    logger.error(`Error parsing compute-statistics-completed result for job ${jobId}: ${err.message}`)
+    io.emit('compute-statistics-completed', { jobId, result: returnvalue })
+  }
+})
+
+computeStatisticsQueueEvents.on('failed', ({ jobId, failedReason }) => {
+  io.emit('compute-statistics-failed', { jobId, error: failedReason })
+})
 
 app.use(cors())
 app.use(express.json())
@@ -29,7 +69,7 @@ const serverAdapter = new ExpressAdapter()
 serverAdapter.setBasePath('/admin/queues')
 
 createBullBoard({
-  queues: [new BullMQAdapter(segmentsQueue)],
+  queues: [new BullMQAdapter(segmentsQueue), new BullMQAdapter(computeStatisticsQueue)],
   serverAdapter: serverAdapter,
 })
 
@@ -66,10 +106,10 @@ app.post('/api/process', async (req, res) => {
     }
   */
   const { segments } = req.body
-  logger.info(`Processing request: ${JSON.stringify(req.body, null, 2)}`)
+  logger.info(`Processing request: ${segments}`)
   try {
     if (segments && Array.isArray(segments)) {
-      const result = await ProcessingSegments(segments)
+      const result = await ProcessingSegmentsAsync(segments)
       if (result.error) {
         return res.status(400).json(result)
       }
@@ -85,7 +125,41 @@ app.post('/api/process', async (req, res) => {
   }
 })
 
-app.listen(port, () => {
+app.post('/api/compute-statistics', async (req, res) => {
+  /*
+    #swagger.parameters['body'] = {
+      in: 'body',
+      description: 'Compute word-sequence statistics for gospel sections',
+      schema: {
+        type: 'object',
+        properties: {
+          verses: { type: 'array' },
+          minLength: { type: 'number' },
+          mode: { type: 'string' },
+          similarityThreshold: { type: 'number' }
+        }
+      }
+    }
+    #swagger.responses[200] = {
+      description: 'Job queued',
+      schema: { jobId: 'string', status: 'queued' }
+    }
+  */
+  const { verses, minLength, mode, similarityThreshold } = req.body
+  logger.info(`Compute statistics request: ${verses?.length || 0} sections, mode=${mode}`)
+  try {
+    if (!verses || !Array.isArray(verses)) {
+      return res.status(400).json({ error: 'verses (array) is required' })
+    }
+    const job = await addComputeStatisticsJob({ verses, minLength, mode, similarityThreshold })
+    return res.json({ jobId: job.id, status: 'queued' })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Internal Server Error', details: error.message })
+  }
+})
+
+server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`)
   console.log(`Swagger docs available at http://localhost:${port}/api-docs`)
   console.log(

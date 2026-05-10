@@ -16,8 +16,10 @@ async function ProcessingSegments(segments) {
 }
 
 async function ProcessingSegmentsAsync(segments) {
-  return result
+  const job = await addSegmentsJob(segments)
+  return { jobId: job.id, status: 'queued' }
 }
 
 module.exports.ProcessingInstruction = ProcessingInstruction
 module.exports.ProcessingSegments = ProcessingSegments
+module.exports.ProcessingSegmentsAsync = ProcessingSegmentsAsync
