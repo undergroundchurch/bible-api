@@ -7,9 +7,17 @@ const doc = {
     description:
       'API for processing Bible commands using ProcessingInstruction',
   },
-  host: 'localhost:3000',
+  host: 'localhost:3001',
   basePath: '/',
   schemes: ['http'],
+  securityDefinitions: {
+    bearerAuth: {
+      type: 'apiKey',
+      name: 'Authorization',
+      in: 'header',
+      description: 'JWT authorization header using the Bearer scheme. Example: "Bearer {token}"',
+    },
+  },
   definitions: {
     ProcessRequest: {
       message: 'bv Mateus 2:2 ACF;Mateus 2:2 BYZ',

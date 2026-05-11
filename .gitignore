@@ -80,3 +80,4 @@ yarn.lock
 .vscode
 
 com.chrome.devtools.json
+users.db

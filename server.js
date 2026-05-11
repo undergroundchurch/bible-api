@@ -10,6 +10,7 @@ const { createBullBoard } = require('@bull-board/api')
 const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter')
 const { ExpressAdapter } = require('@bull-board/express')
 const { segmentsQueue, computeStatisticsQueue, segmentsQueueEvents, addComputeStatisticsJob, computeStatisticsQueueEvents } = require('./workers')
+const { register, login, authenticateToken } = require('./Auth')
 
 const app = express()
 const server = http.createServer(app)
@@ -75,8 +76,59 @@ createBullBoard({
 
 app.use('/admin/queues', serverAdapter.getRouter())
 
-app.post('/api/process', async (req, res) => {
+app.post('/api/auth/register', async (req, res) => {
+  /*
+    #swagger.tags = ['Auth']
+    #swagger.security = []
+    #swagger.parameters['body'] = {
+      in: 'body',
+      description: 'Register a new user',
+      schema: {
+        username: 'user',
+        password: 'password'
+      }
+    }
+  */
+  const { username, password } = req.body
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required' })
+  }
+  try {
+    const user = register(username, password)
+    res.status(201).json({ message: 'User registered successfully', user })
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
+app.post('/api/auth/login', async (req, res) => {
+  /*
+    #swagger.tags = ['Auth']
+    #swagger.security = []
+    #swagger.parameters['body'] = {
+      in: 'body',
+      description: 'Login to get a JWT',
+      schema: {
+        username: 'user',
+        password: 'password'
+      }
+    }
+  */
+  const { username, password } = req.body
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required' })
+  }
+  try {
+    const result = login(username, password)
+    res.json(result)
+  } catch (err) {
+    res.status(401).json({ error: err.message })
+  }
+})
+
+app.post('/api/process', authenticateToken, async (req, res) => {
   /* 
+    #swagger.security = [{ "bearerAuth": [] }]
     #swagger.parameters['body'] = {
       in: 'body',
       description: 'Process a Bible command or segments',
@@ -125,8 +177,9 @@ app.post('/api/process', async (req, res) => {
   }
 })
 
-app.post('/api/compute-statistics', async (req, res) => {
+app.post('/api/compute-statistics', authenticateToken, async (req, res) => {
   /*
+    #swagger.security = [{ "bearerAuth": [] }]
     #swagger.parameters['body'] = {
       in: 'body',
       description: 'Compute word-sequence statistics for gospel sections',
