@@ -326,16 +326,14 @@ function computeStatistics(
         count: finalMatches.length,
         totalWords: totalMatchingWords,
         sequences: finalMatches,
-        matchPercentage: {
-          [g1]:
-            tokenized[g1].length > 0
-              ? ((totalMatchingWords / tokenized[g1].length) * 100).toFixed(1)
-              : '0.0',
-          [g2]:
-            tokenized[g2].length > 0
-              ? ((totalMatchingWords / tokenized[g2].length) * 100).toFixed(1)
-              : '0.0',
-        },
+        matchPercentage:
+          tokenized[g1].length + tokenized[g2].length > 0
+            ? (
+                (2 * totalMatchingWords) /
+                (tokenized[g1].length + tokenized[g2].length) *
+                100
+              ).toFixed(1)
+            : '0.0',
       }
     }
   }
