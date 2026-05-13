@@ -4,9 +4,10 @@ const { register } = require('./Auth')
  * Seed script to create initial users in the users.db
  */
 const initialUsers = [
-  { username: 'admin', password: 'adminpassword' },
-  { username: 'tlabs', password: 'tlabspassword' },
-  { username: 'testuser', password: 'testpassword' },
+  { username: 'admin', password: 'admin' },
+  { username: 'tlabs', password: 'tlabs' },
+  { username: 'testuser', password: 'testuser' },
+  { username: 'crtonussi', password: 'crtonussi' },
 ]
 
 function createUsers() {
