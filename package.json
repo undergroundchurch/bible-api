@@ -11,7 +11,10 @@
     "postinstall": "npm rebuild better-sqlite3",
     "dev": "dotenvx run -- nodemon server.js",
     "start": "dotenvx run -- node server.js",
-    "build:swagger": "dotenvx run -- node swagger.js"
+    "build:swagger": "dotenvx run -- node swagger.js",
+    "test": "dotenvx run -- jest",
+    "test:watch": "dotenvx run -- jest --watch",
+    "test:coverage": "dotenvx run -- jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -45,6 +48,7 @@
   "devDependencies": {
     "@dotenvx/dotenvx": "^1.65.1",
     "dotenv": "^17.4.2",
+    "jest": "^30.4.2",
     "nodemon": "^3.1.14",
     "swagger-autogen": "^2.23.7",
     "swagger-jsdoc": "^6.2.8",
