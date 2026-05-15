@@ -1,5 +1,5 @@
-# Use Node.js 22 as the base for building native modules
-FROM node:22-bookworm-slim AS builder
+# --- Builder Stage ---
+FROM node:22-bookworm AS builder
 
 # Set the working directory
 WORKDIR /app
@@ -9,15 +9,13 @@ RUN apt-get update && apt-get install -y \
     python3 \
     make \
     g++ \
-    redis-server \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy package management files
 COPY package*.json ./
 
-# Install ALL dependencies (including devDependencies for build scripts)
-RUN npm rebuild
-RUN npm install
+# Install ALL dependencies
+RUN npm ci
 
 # Copy the rest of the application source
 COPY . .
@@ -31,9 +29,15 @@ FROM node:22-bookworm-slim
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=3001
+ENV REDIS_HOST=localhost
 
 # Set the working directory
 WORKDIR /app
+
+# Install redis-server and runtime dependencies
+RUN apt-get update && apt-get install -y \
+    redis-server \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy the application from the builder stage
 COPY --from=builder /app /app
@@ -41,9 +45,11 @@ COPY --from=builder /app /app
 # Ensure the database directory is writable (for better-sqlite3)
 RUN mkdir -p /app/db && chmod 777 /app/db
 
-# Expose the port used by the application (Makefile uses 3001)
+# Make entrypoint executable
+RUN chmod +x /app/entrypoint.sh
+
+# Expose the port (3001 as requested)
 EXPOSE 3001
 
-# Start the application
-# We use node directly to avoid issues with dev-only dependencies
-CMD ["./entrypoint.sh"]
+# Use the entrypoint script to start Redis and the app
+ENTRYPOINT ["/app/entrypoint.sh"]
