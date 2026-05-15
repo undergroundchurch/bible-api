@@ -1,8 +1,8 @@
 # Makefile for Fourfold Production
 
 IMAGE_NAME = bible-api
-CONTAINER_PORT = 3000
-HOST_PORT = 3000
+CONTAINER_PORT = 3001
+HOST_PORT = 3001
 SERVICE_NAME = bible-api
 REGION = europe-north2
 
