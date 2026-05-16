@@ -154,6 +154,8 @@ function removeScriptureSupport(verses, publisher) {
         .replace(/<[^>]*>/g, '')
         .replace(/\\cf\d+\s*\\up\d+\s*\d+\s*\\cf\d+\s*\\up\d+/g, '')
         .replace(/\\[a-z]+\d*/gi, '')
+        .replace(/¬/g, '')
+        .replace(/¶/g, '')
         .trim(),
     }
   })

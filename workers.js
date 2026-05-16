@@ -1,6 +1,7 @@
 const { Worker, Queue, QueueEvents } = require('bullmq')
 const { segments: handleSegments } = require('./CommandHandlers')
 const ComputeStatisticsWorker = require('./ComputeStatistics')
+const proxyLogger = require('./Logging')
 
 const connection = {
   host: process.env.REDIS_HOST || 'localhost',
@@ -11,12 +12,14 @@ const segmentsQueue = new Queue('segments', { connection })
 const segmentsQueueEvents = new QueueEvents('segments', { connection })
 
 const computeStatisticsQueue = new Queue('compute-statistics', { connection })
-const computeStatisticsQueueEvents = new QueueEvents('compute-statistics', { connection })
+const computeStatisticsQueueEvents = new QueueEvents('compute-statistics', {
+  connection,
+})
 
 const worker = new Worker(
   'segments',
   async (job) => {
-    console.log(`Processing job ${job.id}: ${job.name}`)
+    proxyLogger.segments(`Processing job ${job.id}: ${job.name}`)
     const segments = job.data.segments
     const result = handleSegments(segments)
     return result
@@ -64,5 +67,5 @@ module.exports = {
   segmentsQueueEvents,
   addComputeStatisticsJob,
   computeStatisticsQueue,
-  computeStatisticsQueueEvents
+  computeStatisticsQueueEvents,
 }

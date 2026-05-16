@@ -40,11 +40,14 @@ segmentsQueueEvents.on('completed', ({ jobId, returnvalue }) => {
   } catch (err) {
     logger.error(`Error parsing process-completed result for job ${jobId}: ${err.message}`)
     io.emit('process-completed', { jobId, result: returnvalue })
+  } finally {
+    io.emit('finish', { jobId })
   }
 })
 
 segmentsQueueEvents.on('failed', ({ jobId, failedReason }) => {
   io.emit('process-failed', { jobId, error: failedReason })
+  io.emit('finish', { jobId })
 })
 
 computeStatisticsQueueEvents.on('completed', ({ jobId, returnvalue }) => {
@@ -54,11 +57,14 @@ computeStatisticsQueueEvents.on('completed', ({ jobId, returnvalue }) => {
   } catch (err) {
     logger.error(`Error parsing compute-statistics-completed result for job ${jobId}: ${err.message}`)
     io.emit('compute-statistics-completed', { jobId, result: returnvalue })
+  } finally {
+    io.emit('finish', { jobId })
   }
 })
 
 computeStatisticsQueueEvents.on('failed', ({ jobId, failedReason }) => {
   io.emit('compute-statistics-failed', { jobId, error: failedReason })
+  io.emit('finish', { jobId })
 })
 
 app.use(cors())
