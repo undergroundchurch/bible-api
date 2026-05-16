@@ -20,7 +20,15 @@ const port = process.env.PORT || 3001
 
 io.on('connection', (socket) => {
   logger.info(`WebSocket connected: ${socket.id}`)
+
+  // Max connection time: 3 hours (10800000 ms)
+  const maxConnectionTimer = setTimeout(() => {
+    logger.info(`Forcefully disconnecting socket ${socket.id} after 3 hours`)
+    socket.disconnect(true)
+  }, 3 * 60 * 60 * 1000)
+
   socket.on('disconnect', () => {
+    clearTimeout(maxConnectionTimer)
     logger.info(`WebSocket disconnected: ${socket.id}`)
   })
 })

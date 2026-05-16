@@ -5,6 +5,7 @@ CONTAINER_PORT = 3001
 HOST_PORT = 3001
 SERVICE_NAME = bible-api
 REGION = europe-north2
+NETWORK_NAME = fourfold-parallel-network
 
 .PHONY: build run rebuild rerun stop clean shell major minor patch deploy
 
@@ -13,7 +14,7 @@ build:
 
 # Run in detached mode so 'make stop' can find it later
 run:
-	docker run -d -p $(HOST_PORT):$(CONTAINER_PORT) -e REDIS_HOST=localhost --name $(IMAGE_NAME)-container $(IMAGE_NAME)
+	docker run -d --network ${NETWORK_NAME} -p $(HOST_PORT):$(CONTAINER_PORT) -e REDIS_HOST=localhost --name $(IMAGE_NAME)-container $(IMAGE_NAME)
 
 rebuild: build
 
@@ -43,3 +44,6 @@ patch:
 
 deploy:
 	gcloud run deploy $(SERVICE_NAME) --source . --region $(REGION) --allow-unauthenticated
+
+logs:
+	docker logs -f $(SERVICE_NAME)-container
