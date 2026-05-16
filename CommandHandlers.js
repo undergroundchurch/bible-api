@@ -136,7 +136,7 @@ function buildVerseRichEmbed(versesParsed) {
   }
 }
 
-function removeScriptureSupport(verses, publisher) {
+function removeSpecificsFromScriptureText(verses, publisher) {
   let versesMap = verses?.map((v) => {
     let scripture = String(v?.scripture || '')
 
@@ -224,7 +224,7 @@ const handleSegments = (segments) => {
     }
 
     const bible = bci.whichPublisher(publisher || '')
-    const verses = removeScriptureSupport(
+    const verses = removeSpecificsFromScriptureText(
       bible.source.findScriptureByRange(bookId, nChapter, nFrom, finalTo),
       publisher
     )
