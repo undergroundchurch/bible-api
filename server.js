@@ -5,11 +5,21 @@ const express = require('express')
 const { Server } = require('socket.io')
 const logger = require('./Logging')
 const swaggerUi = require('swagger-ui-express')
-const { ProcessingInstruction, ProcessingSegments, ProcessingSegmentsAsync } = require('./index')
+const {
+  ProcessingInstruction,
+  ProcessingSegments,
+  ProcessingSegmentsAsync,
+} = require('./index')
 const { createBullBoard } = require('@bull-board/api')
 const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter')
 const { ExpressAdapter } = require('@bull-board/express')
-const { segmentsQueue, computeStatisticsQueue, segmentsQueueEvents, addComputeStatisticsJob, computeStatisticsQueueEvents } = require('./workers')
+const {
+  segmentsQueue,
+  computeStatisticsQueue,
+  segmentsQueueEvents,
+  addComputeStatisticsJob,
+  computeStatisticsQueueEvents,
+} = require('./workers')
 const { register, login, authenticateToken } = require('./Auth')
 
 const app = express()
@@ -21,11 +31,16 @@ const port = process.env.PORT || 3001
 io.on('connection', (socket) => {
   logger.info(`WebSocket connected: ${socket.id}`)
 
-  // Max connection time: 3 hours (10800000 ms)
-  const maxConnectionTimer = setTimeout(() => {
-    logger.info(`Forcefully disconnecting socket ${socket.id} after 3 hours`)
-    socket.disconnect(true)
-  }, 3 * 60 * 60 * 1000)
+  // Max connection time: 5 minutes (300000 ms)
+  const maxConnectionTimer = setTimeout(
+    () => {
+      logger.info(
+        `Forcefully disconnecting socket ${socket.id} after 5 minutes`
+      )
+      socket.disconnect(true)
+    },
+    5 * 60 * 1000
+  )
 
   socket.on('disconnect', () => {
     clearTimeout(maxConnectionTimer)
@@ -35,10 +50,13 @@ io.on('connection', (socket) => {
 
 segmentsQueueEvents.on('completed', ({ jobId, returnvalue }) => {
   try {
-    const parsedResult = typeof returnvalue === 'string' ? JSON.parse(returnvalue) : returnvalue
+    const parsedResult =
+      typeof returnvalue === 'string' ? JSON.parse(returnvalue) : returnvalue
     io.emit('process-completed', { jobId, result: parsedResult })
   } catch (err) {
-    logger.error(`Error parsing process-completed result for job ${jobId}: ${err.message}`)
+    logger.error(
+      `Error parsing process-completed result for job ${jobId}: ${err.message}`
+    )
     io.emit('process-completed', { jobId, result: returnvalue })
   } finally {
     io.emit('finish', { jobId })
@@ -52,10 +70,13 @@ segmentsQueueEvents.on('failed', ({ jobId, failedReason }) => {
 
 computeStatisticsQueueEvents.on('completed', ({ jobId, returnvalue }) => {
   try {
-    const parsedResult = typeof returnvalue === 'string' ? JSON.parse(returnvalue) : returnvalue
+    const parsedResult =
+      typeof returnvalue === 'string' ? JSON.parse(returnvalue) : returnvalue
     io.emit('compute-statistics-completed', { jobId, result: parsedResult })
   } catch (err) {
-    logger.error(`Error parsing compute-statistics-completed result for job ${jobId}: ${err.message}`)
+    logger.error(
+      `Error parsing compute-statistics-completed result for job ${jobId}: ${err.message}`
+    )
     io.emit('compute-statistics-completed', { jobId, result: returnvalue })
   } finally {
     io.emit('finish', { jobId })
@@ -84,7 +105,10 @@ const serverAdapter = new ExpressAdapter()
 serverAdapter.setBasePath('/admin/queues')
 
 createBullBoard({
-  queues: [new BullMQAdapter(segmentsQueue), new BullMQAdapter(computeStatisticsQueue)],
+  queues: [
+    new BullMQAdapter(segmentsQueue),
+    new BullMQAdapter(computeStatisticsQueue),
+  ],
   serverAdapter: serverAdapter,
 })
 
@@ -213,16 +237,25 @@ app.post('/api/compute-statistics', authenticateToken, async (req, res) => {
     }
   */
   const { verses, minLength, mode, similarityThreshold } = req.body
-  logger.info(`Compute statistics request: ${verses?.length || 0} sections, mode=${mode}`)
+  logger.info(
+    `Compute statistics request: ${verses?.length || 0} sections, mode=${mode}`
+  )
   try {
     if (!verses || !Array.isArray(verses)) {
       return res.status(400).json({ error: 'verses (array) is required' })
     }
-    const job = await addComputeStatisticsJob({ verses, minLength, mode, similarityThreshold })
+    const job = await addComputeStatisticsJob({
+      verses,
+      minLength,
+      mode,
+      similarityThreshold,
+    })
     return res.json({ jobId: job.id, status: 'queued' })
   } catch (error) {
     console.error(error)
-    res.status(500).json({ error: 'Internal Server Error', details: error.message })
+    res
+      .status(500)
+      .json({ error: 'Internal Server Error', details: error.message })
   }
 })
 
