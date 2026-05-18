@@ -43,7 +43,7 @@ patch:
 	node minor.js patch
 
 deploy:
-	gcloud run deploy $(SERVICE_NAME) --source . --region $(REGION) --allow-unauthenticated
+	gcloud run deploy $(SERVICE_NAME) --source . --region $(REGION) --allow-unauthenticated --port ${HOST_PORT}
 
 logs:
 	docker logs -f $(SERVICE_NAME)-container
