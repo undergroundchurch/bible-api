@@ -78,8 +78,21 @@ const authenticateToken = (req, res, next) => {
   }
 }
 
+/**
+ * Refresh a JWT — issues a new token with a fresh expiration
+ * @param {string} token - The current (still-valid) JWT
+ * @returns {object} { token }
+ */
+const refreshToken = (token) => {
+  const decoded = jwt.verify(token, JWT_SECRET)
+  const { iat, exp, ...payload } = decoded
+  const newToken = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRATION })
+  return { token: newToken }
+}
+
 module.exports = {
   register,
   login,
-  authenticateToken
+  authenticateToken,
+  refreshToken
 }
