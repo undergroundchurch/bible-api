@@ -20,7 +20,7 @@ const {
   addComputeStatisticsJob,
   computeStatisticsQueueEvents,
 } = require('./workers')
-const { register, login, authenticateToken } = require('./Auth')
+const { register, login, authenticateToken, refreshToken } = require('./Auth')
 
 const app = express()
 const server = http.createServer(app)
@@ -161,6 +161,21 @@ app.post('/api/auth/login', async (req, res) => {
     res.json(result)
   } catch (err) {
     res.status(401).json({ error: err.message })
+  }
+})
+
+app.post('/api/auth/refresh', authenticateToken, (req, res) => {
+  /*
+    #swagger.tags = ['Auth']
+    #swagger.security = [{ "bearerAuth": [] }]
+  */
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+  try {
+    const result = refreshToken(token)
+    res.json(result)
+  } catch (err) {
+    res.status(403).json({ error: 'Could not refresh token' })
   }
 })
 
